@@ -1,17 +1,24 @@
-name: Save Single Value to Artifacts
+name: Read Single Value from Artifacts
 
 on:
   workflow_dispatch:
 
 jobs:
-  save_value:
+  read_value:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: my-artifacts
+
+      - name: Read value from file
+        run: |
+          cat my-artifacts/value.txt
       - name: Write value to file
         run: |
-          echo "42" > value.txt
-
+          echo "100" > value.txt
       - name: Save value as Artifacts
         uses: actions/upload-artifact@v2
         with:
