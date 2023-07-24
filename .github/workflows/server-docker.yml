@@ -1,0 +1,24 @@
+name: "Docker Server Image"
+
+on:
+  schedule:
+    - cron: '0 23 * * 1'
+  workflow_dispatch:
+    inputs:
+      repository_url:
+        required: true
+        default: 'apache/hugegraph'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      repository_url: apache/hugegraph
+      image_url: hugegraph/hugegraph
+
+    steps:
+        - name:
+          run:
+            RESPONSE=$(curl -s "https://api.github.com/repos/${{ env.repository_url }}/branches")
+            echo "$RESPONSE" | jq -r '.[] | select(.name | startswith("release-")) | .name' | grep -P '^release-(?!1\.0\.0)'
+
