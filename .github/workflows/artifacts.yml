@@ -16,24 +16,22 @@ jobs:
         run: |
           if [ -f "artifact/data.txt" ]; then
             # 读取现有 artifact 中的数据
-            DATA=$(cat artifact/data.txt)
+            data=$(cat artifact/data.txt)
           else
             # 设置默认值
-            DATA="Default Value"
+            data="Default Value"
           fi
-          echo "Read data: $DATA"
-          echo "::set-output name=data::$DATA"
+          echo "data=$data" >> $GITHUB_ENV
+
 
       - name: Use the data
         run: |
-          # 获取之前步骤中读取的数据
-          DATA=${{ steps.read_artifact.outputs.data }}
-          echo "Using data: $DATA"
+          echo "Using data:  ${{ env.data }}"
 
       - name: Save data to artifact
         run: |
           # 保存数据到 artifact
-          echo $DATA > artifact/data.txt
+          echo ${{ env.data }} > artifact/data.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
