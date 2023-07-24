@@ -15,5 +15,6 @@ jobs:
           - uses: actions/setup-node@v3
             with:
               node-version: '14'
+          - run: 'echo "field: ${{ github.event.client_payload.payload.version }}"'
           - run: npm install -g bats
           - run: bats -v
