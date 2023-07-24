@@ -1,0 +1,22 @@
+name: Save Single Value to Artifacts
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  save_value:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Write value to file
+        run: |
+          echo "42" > value.txt
+
+      - name: Save value as Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-artifacts
+          path: value.txt
