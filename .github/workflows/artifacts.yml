@@ -1,0 +1,42 @@
+name: Read and Upload Artifact
+
+on:
+  workflow_dispatch:
+
+jobs:
+  read_and_upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Read existing artifact or set default value
+        id: read_artifact
+        run: |
+          if [ -f "artifact/data.txt" ]; then
+            # 读取现有 artifact 中的数据
+            DATA=$(cat artifact/data.txt)
+          else
+            # 设置默认值
+            DATA="Default Value"
+          fi
+          echo "Read data: $DATA"
+          echo "::set-output name=data::$DATA"
+
+      - name: Use the data
+        run: |
+          # 获取之前步骤中读取的数据
+          DATA=${{ steps.read_artifact.outputs.data }}
+          echo "Using data: $DATA"
+
+      - name: Save data to artifact
+        run: |
+          # 保存数据到 artifact
+          echo $DATA > artifact/data.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-artifact
+          path: artifact/data.txt
