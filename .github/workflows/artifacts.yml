@@ -14,9 +14,9 @@ jobs:
       - name: Read existing artifact or set default value
         id: read_artifact
         run: |
-          if [ -f "artifact/data.txt" ]; then
+          if [ -f "data.txt" ]; then
             # 读取现有 artifact 中的数据
-            data=$(cat artifact/data.txt)
+            data=$(cat data.txt)
           else
             # 设置默认值
             data="Default Value"
@@ -31,10 +31,10 @@ jobs:
       - name: Save data to artifact
         run: |
           # 保存数据到 artifact
-          echo ${{ env.data }} > artifact/data.txt
+          echo ${{ env.data }} > data.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: my-artifact
-          path: artifact/data.txt
+          path: data.txt
