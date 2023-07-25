@@ -84,7 +84,7 @@ jobs:
     - name: Test X86 Image
       run: |
         docker images
-        docker run -itd --name=graph -p 18080:8080 $image_url
+        docker run -itd --name=graph -p 18080:8080 $latest_image_url
         sleep 20s
         curl 0.0.0.0:18080 || exit
         docker ps -a
@@ -108,7 +108,7 @@ jobs:
     env:
       repository_url: apache/hugegraph
       stable_branch: release-${{vars.STABLE_VERSION}}
-      stable_image_url: hugegraph/hugegraph:${{vars.STABLE_VERSION}}
+      stable_image_url: dandelionivy/hugegraph:${{vars.STABLE_VERSION}}
     
     steps:
       - name: Reset If Need
@@ -164,7 +164,7 @@ jobs:
       - name: Test X86 Image
         run: |
           docker images
-          docker run -itd --name=graph -p 18080:8080 $image_url
+          docker run -itd --name=graph -p 18080:8080 $stable_image_url
           sleep 20s
           curl 0.0.0.0:18080 || exit
           docker ps -a
