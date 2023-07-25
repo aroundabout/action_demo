@@ -44,9 +44,9 @@ jobs:
         echo "latest_image_url=${{ inputs.latest_image_url }}" >> $GITHUB_ENV
         echo "stable_branch=${{ inputs.stable_branch }}" >> $GITHUB_ENV
         echo "stable_image_url=${{ inputs.stable_image_url }}" >> $GITHUB_ENV
-        branch = ${{ matrix.image_type == 'latest' && env.latest_branch || env.stable_branch }}
+        branch_name = ${{ matrix.image_type == 'latest' && env.latest_branch || env.stable_branch }}
         image_url = ${{ matrix.image_type == 'latest' && env.latest_image_url || env.stable_image_url }}
-        echo "branch=$branch" >> $GITHUB_ENV
+        echo "branch_name=$branch_name" >> $GITHUB_ENV
         echo "image_url=$image_url" >> $GITHUB_ENV
 
     - name: Set up Docker Buildx
@@ -62,7 +62,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: ${{ env.repository_url }}
-        ref: ${{ env.branch }}
+        ref: ${{ env.branch_name }}
         fetch-depth: 2
 
     - name: Get current SHA
@@ -93,7 +93,7 @@ jobs:
         fi
         echo "is_update=$is_update" >> $GITHUB_ENV
         echo $image_url
-        
+
     - name: Build X86 Image
       if: env.is_update == 'true'
       uses: docker/build-push-action@v4
