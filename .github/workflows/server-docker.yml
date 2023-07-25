@@ -71,7 +71,7 @@ jobs:
         echo $latest_current_sha
         if [[ "$latest_current_sha" == "${{ vars.LATEST_SHA }}" ]]; then
           echo "sha is the same, do not update docker image"
-          exit 1
+          exit 0
         else
            curl -L \
             -X PATCH \
