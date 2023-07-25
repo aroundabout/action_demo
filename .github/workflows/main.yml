@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Checkout date
+    - name: Checkout sha
       uses: moonrailgun/branch-filestorage-action@v1.2.2
       with:
-        path: date
+        path: sha
     - name: Read and show
-      run: cat date
-    - name: update date
-      run: echo $(date) > date
+      run: cat sha
+    - name: update sha
+      run: echo $(sha) > sha
