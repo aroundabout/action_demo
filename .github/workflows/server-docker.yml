@@ -60,14 +60,14 @@ jobs:
     - name: Get current SHA
       run: |
         latest_curretn_sha=$(git rev-parse HEAD)
-        echo $latest_curretn_sha >> $GITHUB_ENV
+        echo "latest_current_sha=$latest_current_sha" >> $GITHUB_ENV
     - name: Get last SHA
       env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           OWNER: aroundabout
           REPO: action_demo
       run: |
-        if [[ "${{ env.latest_curretn_sha }}" == "${{ vars.LATEST_SHA }}" ]]; then
+        if [[ "${{ env.latest_current_sha }}" == "${{ vars.LATEST_SHA }}" ]]; then
           echo "sha is the same, do not update docker image"
         else
            curl -L \
@@ -76,5 +76,5 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -H "Authorization: Bearer ${{ env.GITHUB_TOKEN }}" \
             https://api.github.com/repos/$OWNER/$REPO/actions/variables/NAME \
-            -d '{"name":"LATEST_SHA","value":"'"${{ env.latest_curretn_sha}}"'"}'
+            -d '{"name":"LATEST_SHA","value":"'"${{ env.latest_current_sha }}"'"}'
         fi
