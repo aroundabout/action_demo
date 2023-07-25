@@ -11,16 +11,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Generate result
-        run: |
-          # 在这里生成结果，假设结果是存储在 result.txt 文件中
-          echo "This is the result" > result.txt
-          
-      - name: Upload result as Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: my-result-artifact  # Artifact的名称，你可以自定义
-          path: result.txt          # 要上传的结果文件的路径
+
 
 
       - name: Download result Artifact
