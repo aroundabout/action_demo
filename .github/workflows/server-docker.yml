@@ -75,9 +75,10 @@ jobs:
         echo $current_sha
         is_update='true'
         last_sha=${{ matrix.image_type == 'latest' && vars.LATEST_SHA || vars.STABLE_SHA }}
-        if [[ "$current_sha" == "$last_sha" ]]
+        if [[ "$current_sha" == "$last_sha" ]]; then
           echo "sha is the same, do not update docker image"
           is_update='false'
+        fi
         echo "is_update=$is_update" >> $GITHUB_ENV
         echo $image_url
 
@@ -124,7 +125,7 @@ jobs:
         echo $current_sha
         var_name=${{ matrix.image_type == 'latest' && 'LATEST_SHA' || 'STABLE_SHA' }}
         last_sha=${{ matrix.image_type == 'latest' && vars.LATEST_SHA || vars.STABLE_SHA }}
-        if [[ "$current_sha" != "$last_sha" ]]
+        if [[ "$current_sha" != "$last_sha" ]]; then
           curl -L \
           -X PATCH \
           -H "Accept: application/vnd.github+json" \
