@@ -60,14 +60,15 @@ jobs:
     - name: Get current SHA
       run: |
         latest_curretn_sha=$(git rev-parse HEAD)
-        
+        echo $latest_curretn_sha
+        echo "${{ vars.LATEST_SHA }}"
     - name: Get last SHA
       env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           OWNER: aroundabout
           REPO: action_demo
       run: |
-        if [[ "$latest_curretn_sha" == "${{ env.LATEST_SHA }}" ]]; then
+        if [[ "$latest_curretn_sha" == "${{ vars.LATEST_SHA }}" ]]; then
           echo "Condition is met, Stopping the job"
         else
            curl -L \
