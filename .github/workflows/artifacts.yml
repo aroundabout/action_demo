@@ -11,30 +11,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Read existing artifact or set default value
-        id: read_artifact
+      - name: Generate result
         run: |
-          if [ -f "data.txt" ]; then
-            # 读取现有 artifact 中的数据
-            data=$(cat data.txt)
-          else
-            # 设置默认值
-            data="Default Value"
-          fi
-          echo "data=$data" >> $GITHUB_ENV
-
-
-      - name: Use the data
-        run: |
-          echo "Using data:  ${{ env.data }}"
-
-      - name: Save data to artifact
-        run: |
-          # 保存数据到 artifact
-          echo ${{ env.data }} > data.txt
-
-      - name: Upload artifact
+          # 在这里生成结果，假设结果是存储在 result.txt 文件中
+          echo "This is the result" > result.txt
+          
+      - name: Upload result as Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: my-artifact
-          path: data.txt
+          name: my-result-artifact  # Artifact的名称，你可以自定义
+          path: result.txt          # 要上传的结果文件的路径
+
+
+      - name: Download result Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: my-result-artifact  # 要下载的Artifact的名称，与上面保存的名称对应
+          path: .   # 下载后保存结果文件的目录
+          
+      - name: Use result from previous workflow
+        run: |
+          # 使用之前保存的结果文件
+          cat ./result.txt
