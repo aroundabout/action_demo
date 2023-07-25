@@ -78,7 +78,7 @@ jobs:
       run: |
         echo $current_sha
         is_update='true'
-        var_name = ${{ matrix.image_type == 'latest' && 'LATEST_SHA' || 'STABLE_SHA' }}
+        var_name=${{ matrix.image_type == 'latest' && 'LATEST_SHA' || 'STABLE_SHA' }}
         if [[ "$current_sha" == "${{ vars.LATEST_SHA }}" ]]; then
           echo "sha is the same, do not update docker image"
           is_update='false'
