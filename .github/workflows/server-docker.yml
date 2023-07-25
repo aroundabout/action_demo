@@ -23,12 +23,17 @@ on:
 
 jobs:
   build_latest:
+    strategy:
+      matrix:
+        image_type: ['latest', 'stable']
+        
     runs-on: ubuntu-latest
     env:
       repository_url: apache/hugegraph
       latest_branch: master
       latest_image_url: dandelionivy/hugegraph:latest
-
+      stable_branch: release-${{vars.STABLE_VERSION}}
+      stable_image_url: dandelionivy/hugegraph:${{vars.STABLE_VERSION}}
 
     steps:
     - name: Reset If Need
@@ -37,54 +42,72 @@ jobs:
         echo "repository_url=${{ inputs.repository_url }}" >> $GITHUB_ENV
         echo "latest_branch=${{ inputs.latest_branch }}" >> $GITHUB_ENV
         echo "latest_image_url=${{ inputs.latest_image_url }}" >> $GITHUB_ENV
+        echo "stable_branch=${{ inputs.stable_branch }}" >> $GITHUB_ENV
+        echo "stable_image_url=${{ inputs.stable_image_url }}" >> $GITHUB_ENV
+        branch = ${{ matrix.image_type == 'latest' && env.latest_branch || env.stable_branch }}
+        image_url = ${{ matrix.image_type == 'latest' && env.latest_image_url || env.stable_image_url }}
+        echo "branch=$branch" >> $GITHUB_ENV
+        echo "image_url=$image_url" >> $GITHUB_ENV
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
+
     - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
     - name: Checkout latest
       uses: actions/checkout@v3
       with:
         repository: ${{ env.repository_url }}
-        ref: ${{ env.latest_branch }}
+        ref: ${{ env.branch }}
         fetch-depth: 2
+
     - name: Get current SHA
       run: |
-        latest_current_sha=$(git rev-parse HEAD)
-        echo "latest_current_sha=$latest_current_sha" >> $GITHUB_ENV
+        current_sha=$(git rev-parse HEAD)
+        echo "current_sha=$current_sha" >> $GITHUB_ENV
+
     - name: Get last SHA
       env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           OWNER: aroundabout
           REPO: action_demo
       run: |
-        echo $latest_current_sha
-        if [[ "$latest_current_sha" == "${{ vars.LATEST_SHA }}" ]]; then
+        echo $current_sha
+        is_update = 'true'
+        var_name = ${{ matrix.image_type == 'latest' && 'LATEST_SHA' || 'STABLE_SHA' }}
+        if [[ "$current_sha" == "${{ vars.LATEST_SHA }}" ]]; then
           echo "sha is the same, do not update docker image"
-          exit 0
+          is_update='false'
         else
            curl -L \
             -X PATCH \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -H "Authorization: Bearer ${{ env.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/$OWNER/$REPO/actions/variables/LATEST_SHA \
-            -d '{"name":"LATEST_SHA","value":"'"$latest_current_sha"'"}'
+            https://api.github.com/repos/$OWNER/$REPO/actions/variables/$var_name \
+            -d '{"name":"'"$var_name"'","value":"'"$current_sha"'"}'
         fi
+        echo "is_update=$is_update" >> $GITHUB_ENV
+        echo $image_url
+        
     - name: Build X86 Image
+      if: env.is_update == 'true'
       uses: docker/build-push-action@v4
       with:
         context: .
         load: true
-        tags: ${{ env.latest_image_url }}
+        tags: ${{ env.image_url }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     - name: Test X86 Image
+      if: env.is_update == 'true'
       run: |
         docker images
-        docker run -itd --name=graph -p 18080:8080 $latest_image_url
+        docker run -itd --name=graph -p 18080:8080 $image_url
         sleep 20s
         curl 0.0.0.0:18080 || exit
         docker ps -a
@@ -92,93 +115,13 @@ jobs:
         curl 0.0.0.0:18080 || exit
         docker ps -a
     - name: Build ARM & Push all
+      if: env.is_update == 'true'
       uses: docker/build-push-action@v4
       with:
         context: .
         file: ./Dockerfile
         platforms: linux/amd64,linux/arm64
         push: true
-        tags: ${{ env.latest_image_url }}
+        tags: ${{ env.image_url }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-
-  # The following yaml is similar to the latest one 
-  build_stable:
-    runs-on: ubuntu-latest
-    env:
-      repository_url: apache/hugegraph
-      stable_branch: release-${{vars.STABLE_VERSION}}
-      stable_image_url: dandelionivy/hugegraph:${{vars.STABLE_VERSION}}
-    
-    steps:
-      - name: Reset If Need
-        if: github.event_name=='workflow_dispatch'
-        run: |
-          echo "repository_url=${{ inputs.repository_url }}" >> $GITHUB_ENV
-          echo "stable_branch=${{ inputs.stable_branch }}" >> $GITHUB_ENV
-          echo "stable_image_url=${{ inputs.stable_image_url }}" >> $GITHUB_ENV
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Checkout latest
-        uses: actions/checkout@v3
-        with:
-          repository: ${{ env.repository_url }}
-          ref: ${{ env.stable_branch }}
-          fetch-depth: 2
-      - name: Get current SHA
-        run: |
-          stable_current_sha=$(git rev-parse HEAD)
-          echo "stable_current_sha=$stable_current_sha" >> $GITHUB_ENV
-      - name: Get last SHA
-        env:
-            GITHUB_TOKEN: ${{ secrets.PAT }}
-            OWNER: aroundabout
-            REPO: action_demo
-        run: |
-          echo $stable_current_sha
-          if [[ "$stable_current_sha" == "${{ vars.STABLE_SHA }}" ]]; then
-            echo "sha is the same, do not update docker image"
-            exit 0
-          else
-            curl -L \
-              -X PATCH \
-              -H "Accept: application/vnd.github+json" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
-              -H "Authorization: Bearer ${{ env.GITHUB_TOKEN }}" \
-              https://api.github.com/repos/$OWNER/$REPO/actions/variables/STABLE_SHA \
-              -d '{"name":"STABLE_SHA","value":"'"$stable_current_sha"'"}'
-          fi
-      - name: Build X86 Image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          load: true
-          tags: ${{ env.stable_image_url }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: Test X86 Image
-        run: |
-          docker images
-          docker run -itd --name=graph -p 18080:8080 $stable_image_url
-          sleep 20s
-          curl 0.0.0.0:18080 || exit
-          docker ps -a
-          sleep 20s
-          curl 0.0.0.0:18080 || exit
-          docker ps -a
-      - name: Build ARM & Push all
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ env.stable_image_url }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-  
