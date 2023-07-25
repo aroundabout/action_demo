@@ -59,7 +59,7 @@ jobs:
         
     - name: Get current SHA
       run: |
-        latest_curretn_sha=$(git rev-parse HEAD)
+        latest_current_sha=$(git rev-parse HEAD)
         echo "latest_current_sha=$latest_current_sha" >> $GITHUB_ENV
     - name: Get last SHA
       env:
@@ -67,6 +67,7 @@ jobs:
           OWNER: aroundabout
           REPO: action_demo
       run: |
+        echo $latest_current_sha
         if [[ "${{ env.latest_current_sha }}" == "${{ vars.LATEST_SHA }}" ]]; then
           echo "sha is the same, do not update docker image"
         else
