@@ -71,6 +71,7 @@ jobs:
         echo $latest_current_sha
         if [[ "$latest_current_sha" == "${{ vars.LATEST_SHA }}" ]]; then
           echo "sha is the same, do not update docker image"
+          exit 1
         else
            curl -L \
             -X PATCH \
@@ -80,3 +81,5 @@ jobs:
             https://api.github.com/repos/$OWNER/$REPO/actions/variables/LATEST_SHA \
             -d '{"name":"LATEST_SHA","value":"'"$latest_current_sha"'"}'
         fi
+# the step to build and push docker image like https://github.com/imbajin/nocode/blob/master/.github/workflows/server-docker.yml
+# following the the next job to build and publish the stable version
