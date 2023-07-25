@@ -27,7 +27,7 @@ jobs:
     env:
       repository_url: apache/hugegraph
       latest_branch: master
-      latest_image_url: hugegraph/hugegraph:latest
+      latest_image_url: dandelionivy/hugegraph:latest
 
 
     steps:
