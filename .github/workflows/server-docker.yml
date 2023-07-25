@@ -22,7 +22,7 @@ on:
         default: 'hugegraph/hugegraph:1.0.0'
 
 jobs:
-  build:
+  build_latest:
     runs-on: ubuntu-latest
     env:
       repository_url: apache/hugegraph
@@ -50,8 +50,6 @@ jobs:
     #       #registry: ${{ inputs.image_url }}
     #     username: ${{ secrets.DOCKERHUB_USERNAME }}
     #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
-    - name: Get last SHA
-      run: 
     - name: Checkout latest
       uses: actions/checkout@v3
       with:
