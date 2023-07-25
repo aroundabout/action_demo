@@ -60,6 +60,8 @@ jobs:
     - name: Get current SHA
       run: |
         latest_current_sha=$(git rev-parse HEAD)
+        echo "latest_current_sha=$latest_current_sha" >> $GITHUB_ENV
+
     - name: Get last SHA
       env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
