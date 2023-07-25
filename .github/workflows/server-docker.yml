@@ -77,5 +77,5 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -H "Authorization: Bearer ${{ env.GITHUB_TOKEN }}" \
             https://api.github.com/repos/$OWNER/$REPO/actions/variables/NAME \
-            -d '{"name":"LATEST_SHA","value":"'"$latest_curretn_sha"'"}'
+            -d '{"name":"LATEST_SHA","value":"$latest_curretn_sha"}'
         fi
