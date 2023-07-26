@@ -16,17 +16,18 @@ on:
         default: 'dandelionivy/hugegraph:latest'
       stable_branch:
         required: true
-        default: 'release-${{ vars.STABLE_VERSION }}'
+        default: release-${{ vars.STABLE_VERSION }}
       stable_image_url:
         required: true
-        default: 'dandelionivy/hugegraph:${{ vars.STABLE_VERSION }}'
+        default: dandelionivy/hugegraph:${{ vars.STABLE_VERSION }}
 
 jobs:
   build_latest:
     strategy:
       matrix:
-        image_type: ['latest', 'stable']
-        
+#         image_type: ['latest', 'stable']
+          image_type: ['latest']
+
     runs-on: ubuntu-latest
     env:
       repository_url: apache/hugegraph
