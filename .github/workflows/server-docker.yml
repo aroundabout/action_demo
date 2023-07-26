@@ -5,21 +5,21 @@ on:
     - cron: '0 23 * * 1'
   workflow_dispatch:
     inputs:
-      repository_url:
-        required: true
-        default: 'apache/hugegraph'
-      latest_branch:
-        required: true
-        default: 'master'
-      latest_image_url:
-        required: true
-        default: 'dandelionivy/hugegraph:latest'
+#       repository_url:
+#         required: true
+#         default: 'apache/hugegraph'
+#       latest_branch:
+#         required: true
+#         default: 'master'
+#       latest_image_url:
+#         required: true
+#         default: 'dandelionivy/hugegraph:latest'
       stable_branch:
         required: true
-        default: release-${{ vars.STABLE_VERSION }}
+        default: 'release-1.0.0'
       stable_image_url:
         required: true
-        default: dandelionivy/hugegraph:${{ vars.STABLE_VERSION }}
+        default: 'dandelionivy/hugegraph:1.0.0'
 
 jobs:
   build_latest:
@@ -40,9 +40,6 @@ jobs:
     - name: Reset If Need
       if: github.event_name=='workflow_dispatch'
       run: |
-        echo "repository_url=${{ inputs.repository_url }}" >> $GITHUB_ENV
-        echo "latest_branch=${{ inputs.latest_branch }}" >> $GITHUB_ENV
-        echo "latest_image_url=${{ inputs.latest_image_url }}" >> $GITHUB_ENV
         echo "stable_branch=${{ inputs.stable_branch }}" >> $GITHUB_ENV
         echo "stable_image_url=${{ inputs.stable_image_url }}" >> $GITHUB_ENV
         branch_name=${{ matrix.image_type == 'latest' && env.latest_branch || env.stable_branch }}
@@ -117,7 +114,7 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
-    - name: Get last SHA
+    - name: Updata last SHA
       env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           OWNER: aroundabout
