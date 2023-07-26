@@ -16,10 +16,10 @@ on:
         default: 'dandelionivy/hugegraph:latest'
       stable_branch:
         required: true
-        default: 'release-1.0.0'
+        default: 'release-${{ vars.STABLE_VERSION }}'
       stable_image_url:
         required: true
-        default: 'dandelionivy/hugegraph:1.0.0'
+        default: 'dandelionivy/hugegraph:${{ vars.STABLE_VERSION }}'
 
 jobs:
   build_latest:
