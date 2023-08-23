@@ -65,6 +65,7 @@ jobs:
 
     - name: Get last SHA
       run: |
+        echo "$image_url"
         is_update='true'
         last_sha=${{ matrix.image_type == 'latest' && vars.LATEST_SHA || vars.STABLE_SHA }}
         if [[ "$current_sha" == "$last_sha" ]]; then
