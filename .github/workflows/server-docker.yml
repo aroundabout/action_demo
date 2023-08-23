@@ -85,6 +85,7 @@ jobs:
     - name: Test X86 Image
       if: env.is_update == 'true'
       run: |
+        echo "$image_url"
         docker images
         docker run -itd --name=graph -p 18080:8080 $image_url
         sleep 20s
