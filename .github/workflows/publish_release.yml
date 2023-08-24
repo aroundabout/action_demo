@@ -2,10 +2,10 @@ name: "publish release version server"
 on:
   workflow_dispatch:
     inputs:
-      TAG:
+      tag:
         required: true
         default: '1.0.0'
-      SUBTAG:
+      subtag:
         required: false
         default: ''
 
@@ -14,10 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       repository_url: aroundabout/incubator-hugegraph
-      branch: ${{inputs.SUBTAG}}!='' && release-${{inputs.TAG}} || release-${{inputs.TAG}}-${{inputs.SUBTAG}}
-      image_url: dandelionivy/hugegraph:${{inputs.TAG}}
+      image_url: dandelionivy/hugegraph:${{inputs.tag}}
 
     steps:
+    - name: Check Env
+      run: |
+        branch=${{ inputs.tag=='' && 'release-'inputs.tag || 'release-'inputs.tag'-'inputs.subtag }}
+        
+        
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
