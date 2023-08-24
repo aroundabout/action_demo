@@ -19,7 +19,7 @@ jobs:
     steps:
     - name: Check Env
       run: |
-        branch=${{ inputs.tag=='' && 'release-'inputs.tag || 'release-'inputs.tag'-'inputs.subtag }}
+        branch=${{ inputs.tag=='' && 'release-' + inputs.tag || 'release-' + inputs.tag + '-' + inputs.subtag }}
         
         
     - name: Set up Docker Buildx
