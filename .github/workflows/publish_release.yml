@@ -4,8 +4,8 @@ on:
     inputs:
       tag:
         required: true
-        default: '1.0.0'
-      subtag:
+        default: ''
+      branch:
         required: false
         default: ''
 
@@ -15,12 +15,13 @@ jobs:
     env:
       repository_url: aroundabout/incubator-hugegraph
       image_url: dandelionivy/hugegraph:${{inputs.tag}}
+      branch: release-${{inputs.tag}}
 
     steps:
-    - name: Check Env
+    - name: Set branch
       run: |
-        branch=${{ inputs.tag=='' && 'release-' + inputs.tag || 'release-' + inputs.tag + '-' + inputs.subtag }}
-        
+        branch=${{ inputs.branch=='' && env.branch || inputs.branch }}
+        echo "branch=$branch" >> $GITHUB_ENV
         
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -39,7 +40,6 @@ jobs:
         fetch-depth: 2
 
     - name: Build X86 Image
-      if: env.is_update == 'true'
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -49,7 +49,6 @@ jobs:
         cache-to: type=gha,mode=max
 
     - name: Test X86 Image
-      if: env.is_update == 'true'
       run: |
         echo "$image_url"
         docker images
@@ -62,7 +61,6 @@ jobs:
         docker ps -a
 
     - name: Build ARM & Push all
-      if: env.is_update == 'true'
       uses: docker/build-push-action@v4
       with:
         context: .
