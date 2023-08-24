@@ -60,7 +60,7 @@ jobs:
       run: |
         echo "$image_url"
         docker images
-        docker run -itd --name=graph -p 18080:8080 ${{env.image_url}}
+        docker run -itd --name=graph -p 18080:8080 ${{ env.image_url }}
         sleep 20s
         curl 0.0.0.0:18080 || exit
         docker ps -a
@@ -86,14 +86,14 @@ jobs:
           OWNER: aroundabout
           REPO: action_demo
       run: |
-        var_name=${{ matrix.image_type == 'latest' && 'LATEST_SHA' || 'STABLE_SHA' }}
-        last_sha=${{ matrix.image_type == 'latest' && vars.LATEST_SHA || vars.STABLE_SHA }}
-        if [[ "$current_sha" != "$last_sha" ]]; then
+        var_name='LATEST_SHA'
+        last_sha=${{vars.LATEST_SHA}}
+        if [[ "env.current_sha" != "$last_sha" ]]; then
           curl -L \
           -X PATCH \
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           -H "Authorization: Bearer ${{ env.GITHUB_TOKEN }}" \
           https://api.github.com/repos/$OWNER/$REPO/actions/variables/$var_name \
-          -d '{"name":"'"$var_name"'","value":"'"$current_sha"'"}'
+          -d '{"name":"'"$var_name"'","value":"'"${{ env.current_sha }}"'"}'
         fi
