@@ -60,7 +60,7 @@ jobs:
       run: |
         echo "$image_url"
         docker images
-        docker run -itd --name=graph -p 18080:8080 ${{ env.image_url }}
+        docker run -itd --name=graph -p 18080:8080 $image_url
         sleep 20s
         curl 0.0.0.0:18080 || exit
         docker ps -a
