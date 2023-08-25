@@ -40,7 +40,7 @@ jobs:
         echo "$image_url"
         is_update='true'
         last_sha=${{vars.LATEST_SHA}}
-        if [[ "$current_sha" == "$last_sha" ]]; then
+        if [[ "env.current_sha" == "$last_sha" ]]; then
           is_update='false'
         fi
         echo "is_update=$is_update" >> $GITHUB_ENV
