@@ -38,11 +38,14 @@ jobs:
     - name: Get last commit-hash
       run: |
         last_commit_hash=${{vars.LAST_COMMIT_HASH}}
-        if [[ "$current_commit_hash" == "$last_commit_hash" ]]; then
-          exit 0
+        need_update='false'
+        if [[ "$current_commit_hash" != "$last_commit_hash" ]]; then
+          need_update='true'
         fi
+        echo "need_update=$need_update" >> $GITHUB_ENV
 
     - name: Build X86 Image
+      if: env.is_update == 'true'
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -52,6 +55,7 @@ jobs:
         cache-to: type=gha,mode=max
 
     - name: Test X86 Image
+      if: env.is_update == 'true'
       run: |
         docker images
         docker run -itd --name=graph -p 18080:8080 $image_url
@@ -63,6 +67,7 @@ jobs:
         docker ps -a
 
     - name: Build ARM & Push all
+      if: env.is_update == 'true'
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -74,6 +79,7 @@ jobs:
         cache-to: type=gha,mode=max
 
     - name: Updata last commit-hash
+      if: env.is_update == 'true'
       env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           OWNER: aroundabout
