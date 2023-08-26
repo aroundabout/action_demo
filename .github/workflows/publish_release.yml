@@ -16,7 +16,7 @@ jobs:
     steps:
     - name: Set image url
       run: |
-        image_url=$(echo "${{ inputs.branch }}" | grep -oP '(\d+\.\d+\.\d+)')
+        image_url=dandelionivy/hugegraph:$(echo "${{ inputs.branch }}" | grep -oP '(\d+\.\d+\.\d+)')
         echo "image_url=$image_url" >> $GITHUB_ENV
         
     - name: Set up Docker Buildx
