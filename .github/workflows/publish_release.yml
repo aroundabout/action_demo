@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       repository_url: aroundabout/incubator-hugegraph
-      image_url: dandelionivy/hugegraph:${{inputs.tag}}
       branch: ${{inputs.branch}}
 
     steps:
