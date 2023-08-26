@@ -11,7 +11,7 @@ jobs:
     env:
       repository_url: apache/hugegraph
       branch: master
-      image_url: hugegraph/hugegraph:latest
+      image_url: dandelionivy/hugegraph:latest
 
     steps:
     - name: Set up Docker Buildx
