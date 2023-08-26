@@ -17,6 +17,7 @@ jobs:
     - name: Set image url
       run: |
         image_url=dandelionivy/hugegraph:$(echo "${{ inputs.branch }}" | grep -oP '(\d+\.\d+\.\d+)')
+        echo $image_url
         echo "image_url=$image_url" >> $GITHUB_ENV
         
     - name: Set up Docker Buildx
@@ -48,7 +49,7 @@ jobs:
       run: |
         echo "$image_url"
         docker images
-        docker run -itd --name=graph -p 18080:8080 ${{env.image_url}}
+        docker run -itd --name=graph -p 18080:8080 $image_url
         sleep 20s
         curl 0.0.0.0:18080 || exit
         docker ps -a
