@@ -60,7 +60,7 @@ jobs:
       run: |
         echo "$image_url"
         docker images
-        docker run -itd --name=graph -p 18080:8080 ${{ env.image_url }}
+        docker run -itd --name=graph -p 18080:8080 $image_url
         sleep 20s
         curl 0.0.0.0:18080 || exit
         docker ps -a
@@ -88,7 +88,7 @@ jobs:
       run: |
         var_name='LATEST_SHA'
         last_sha=${{vars.LATEST_SHA}}
-        if [[ "env.current_sha" != "$last_sha" ]]; then
+        if [[ "$current_sha" != "$last_sha" ]]; then
           curl -L \
           -X PATCH \
           -H "Accept: application/vnd.github+json" \
