@@ -90,5 +90,5 @@ jobs:
         -H "Accept: application/vnd.github+json" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
         -H "Authorization: Bearer $GITHUB_TOKEN" \
-        https://api.github.com/repos/$OWNER/$REPO/actions/variables/$var_name \
+        https://api.github.com/repos/$OWNER/$REPO/actions/variables/LAST_COMMIT_HASH \
         -d '{"name":"LAST_COMMIT_HASH","value":"'"$current_commit_hash"'"}'
