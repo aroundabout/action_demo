@@ -11,7 +11,7 @@ jobs:
     env:
       REPOSITORY_URL: apache/hugegraph
       BRANCH: master
-      IMAGE_URL: hugegraph/hugegraph:latest
+      IMAGE_URL: dandelionivy/hugegraph:latest
       GITHUB_TOKEN: ${{ secrets.PAT }}
       OWNER: aroundabout
       REPO: action_demo
@@ -71,17 +71,17 @@ jobs:
         curl 0.0.0.0:18080 || exit
         docker ps -a
 
-    - name: Build ARM & Push all
-      if: env.need_update == 'true'
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        file: ./Dockerfile
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: ${{ env.IMAGE_URL }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+    # - name: Build ARM & Push all
+    #   if: env.need_update == 'true'
+    #   uses: docker/build-push-action@v4
+    #   with:
+    #     context: .
+    #     file: ./Dockerfile
+    #     platforms: linux/amd64,linux/arm64
+    #     push: true
+    #     tags: ${{ env.IMAGE_URL }}
+    #     cache-from: type=gha
+    #     cache-to: type=gha,mode=max
 
     - name: Updata last commit-hash
       if: env.need_update == 'true'
