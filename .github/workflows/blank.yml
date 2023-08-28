@@ -13,8 +13,8 @@ jobs:
       branch: master
       image_url: hugegraph/hugegraph:latest
       GITHUB_TOKEN: ${{ secrets.PAT }}
-      OWNER: hugegraph
-      REPO: hugegraph-actions
+      OWNER: aroundabout
+      REPO: action_demo
       
     steps:
     - name: Set up Docker Buildx
