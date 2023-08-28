@@ -37,12 +37,12 @@ jobs:
     - name: Get current commit-hash
       run: |
         current_commit_hash=$(git rev-parse HEAD)
-        echo "current_commit_hash=$current_commit_hash" >> $GITHUB_ENV
+        echo "CURRENT_COMMIT_HASH=$current_commit_hash" >> $GITHUB_ENV
 
     - name: Check if an update is needed
       run: |
         need_update='false'
-        if [[ "$current_commit_hash" != "$LAST_COMMIT_HASH" ]]; then
+        if [[ "$CURRENT_COMMIT_HASH" != "$LAST_COMMIT_HASH" ]]; then
           need_update='true'
         fi
         echo "need_update=$need_update" >> $GITHUB_ENV
@@ -91,4 +91,4 @@ jobs:
         -H "X-GitHub-Api-Version: 2022-11-28" \
         -H "Authorization: Bearer $GITHUB_TOKEN" \
         https://api.github.com/repos/$OWNER/$REPO/actions/variables/LAST_COMMIT_HASH \
-        -d '{"name":"LAST_COMMIT_HASH","value":"'"$current_commit_hash"'"}'
+        -d '{"name":"LAST_COMMIT_HASH","value":"'"$CURRENT_COMMIT_HASH"'"}'
