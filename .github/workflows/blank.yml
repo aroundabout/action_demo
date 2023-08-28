@@ -9,9 +9,9 @@ jobs:
   build_latest:
     runs-on: ubuntu-latest
     env:
-      repository_url: apache/hugegraph
-      branch: master
-      image_url: dandelionivy/hugegraph:latest
+      REPOSITORY_URL: apache/hugegraph
+      BRANCH: master
+      IMAGE_URL: hugegraph/hugegraph:latest
       GITHUB_TOKEN: ${{ secrets.PAT }}
       OWNER: aroundabout
       REPO: action_demo
@@ -30,8 +30,8 @@ jobs:
     - name: Checkout latest
       uses: actions/checkout@v3
       with:
-        repository: ${{ env.repository_url }}
-        ref: ${{ env.branch }}
+        repository: ${{ env.REPOSITORY_URL }}
+        ref: ${{ env.BRANCH }}
         fetch-depth: 2
 
     - name: Get current commit-hash
@@ -39,7 +39,7 @@ jobs:
         current_commit_hash=$(git rev-parse HEAD)
         echo "current_commit_hash=$current_commit_hash" >> $GITHUB_ENV
 
-    - name: Get last commit-hash
+    - name: Check if an update is needed
       run: |
         need_update='false'
         if [[ "$current_commit_hash" != "$LAST_COMMIT_HASH" ]]; then
@@ -55,7 +55,7 @@ jobs:
       with:
         context: .
         load: true
-        tags: ${{ env.image_url }}
+        tags: ${{ env.IMAGE_URL }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
@@ -63,7 +63,7 @@ jobs:
       if: env.need_update == 'true'
       run: |
         docker images
-        docker run -itd --name=graph -p 18080:8080 $image_url
+        docker run -itd --name=graph -p 18080:8080 $IMAGE_URL
         sleep 20s
         curl 0.0.0.0:18080 || exit
         docker ps -a
@@ -79,7 +79,7 @@ jobs:
         file: ./Dockerfile
         platforms: linux/amd64,linux/arm64
         push: true
-        tags: ${{ env.image_url }}
+        tags: ${{ env.IMAGE_URL }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
