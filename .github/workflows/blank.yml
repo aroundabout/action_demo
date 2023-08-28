@@ -12,15 +12,15 @@ jobs:
       repository_url: apache/hugegraph
       branch: master
       image_url: dandelionivy/hugegraph:latest
-      
+
+    steps:
     - name: Get current commit-hash
       run: |
         current_commit_hash=$(git rev-parse HEAD)
         echo $current_commit_hash
         echo ${{ env.image_url }}
         echo $image_url
-
-    steps:
+    
     - name: Checkout latest
       uses: actions/checkout@v3
       with:
