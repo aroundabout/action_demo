@@ -1,0 +1,29 @@
+name: "test"
+# todo: expand the yaml to deal with multi release version 
+on:
+  schedule:
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+jobs:
+  build_latest:
+    runs-on: ubuntu-latest
+    env:
+      repository_url: apache/hugegraph
+      branch: master
+      image_url: dandelionivy/hugegraph:latest
+
+    steps:
+    - name: Checkout latest
+      uses: actions/checkout@v3
+      with:
+        repository: $repository_url
+        ref: ${{ env.branch }}
+        fetch-depth: 2
+
+    - name: Get current commit-hash
+      run: |
+        current_commit_hash=$(git rev-parse HEAD)
+        echo $current_commit_hash
+        echo ${{ env.image_url }}
+        echo $image_url
