@@ -30,7 +30,7 @@ jobs:
     - name: Checkout latest
       uses: actions/checkout@v3
       with:
-        repository: ${{ env.REPOSITORY_URL }}
+        repository: $REPOSITORY_URL
         ref: ${{ env.BRANCH }}
         fetch-depth: 2
 
