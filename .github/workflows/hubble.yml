@@ -5,10 +5,10 @@ on:
     inputs:
       repository_url:
         required: true
-        default: 'apache/incubator-hugegraph-toolchain'
+        default: 'aroundabout/incubator-hugegraph-toolchain'
       repository_branch:
         required: true
-        default: 'master'
+        default: 'arm-fix'
       image_url:
         required: true
         default: 'dandelionivy/hubble'
@@ -48,7 +48,7 @@ jobs:
         with:
           context: .
           file: ./hugegraph-hubble/Dockerfile
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           tags: ${{ env.IMAGE_URI }}
           push: true
           cache-from: type=gha
