@@ -1,4 +1,4 @@
-name: "Publish server image(latest)"
+name: "Publish hubble image(latest)"
 
 on:
   schedule:
