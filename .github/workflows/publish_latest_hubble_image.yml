@@ -13,8 +13,8 @@ jobs:
       BRANCH: master
       IMAGE_URL: dandelionivy/hubble:latest
       GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      OWNER: hugegraph
-      REPO: actions
+      OWNER: aroundabout
+      REPO: action_demo
       LAST_HUBBLE_HASH: ${{vars.LAST_HUBBLE_HASH}}
       
     steps:
