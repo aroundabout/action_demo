@@ -55,7 +55,7 @@ jobs:
         context: .
         file: ./hugegraph-hubble/Dockerfile
         platforms: linux/amd64,linux/arm64
-        tags: ${{ env.IMAGE_URI }}
+        tags: ${{ env.IMAGE_URL }}
         push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
