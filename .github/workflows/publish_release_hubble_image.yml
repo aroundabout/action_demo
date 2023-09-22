@@ -11,7 +11,7 @@ jobs:
   build_latest:
     runs-on: ubuntu-latest
     env:
-      REPOSITORY_URL: apache/hugegraph-toolchain
+      REPOSITORY_URL: aroundabout/incubator-hugegraph-toolchain
       BRANCH: ${{inputs.branch}}
 
     steps:
