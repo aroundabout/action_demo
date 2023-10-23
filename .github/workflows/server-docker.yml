@@ -1,8 +1,6 @@
 name: "Publish server image(latest)"
 # todo: expand the yaml to deal with multi release version 
 on:
-  schedule:
-    - cron: '0 23 * * *'
   workflow_dispatch:
 
 jobs:
@@ -10,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       repository_url: aroundabout/incubator-hugegraph
-      branch: docker_cassandra
+      branch: fix_cassandra
       image_url: dandelionivy/hugegraph:latest
 
     steps:
