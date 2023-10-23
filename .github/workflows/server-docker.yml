@@ -9,8 +9,8 @@ jobs:
   build_latest:
     runs-on: ubuntu-latest
     env:
-      repository_url: apache/hugegraph
-      branch: master
+      repository_url: aroundabout/incubator-hugegraph
+      branch: docker_cassandra
       image_url: dandelionivy/hugegraph:latest
 
     steps:
@@ -59,10 +59,10 @@ jobs:
       run: |
         docker images
         docker run -itd --name=graph -p 18080:8080 $image_url
-        sleep 60s
+        sleep 20s
         curl 0.0.0.0:18080 || exit
         docker ps -a
-        sleep 60s
+        sleep 20s
         curl 0.0.0.0:18080 || exit
         docker ps -a
 
