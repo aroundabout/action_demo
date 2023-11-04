@@ -36,7 +36,7 @@ jobs:
     steps:
     - name: Set image_url
       run: |
-        image_url=${env.IMAGE_URL}:${{env.TAG}}
+        image_url=${{env.IMAGE_URL}}:${{env.TAG}}
         echo $image_url && echo "IMAGE_URL=$image_url" >> $GITHUB_ENV
         
     - name: Set up Docker Buildx
