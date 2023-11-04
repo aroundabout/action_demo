@@ -64,7 +64,8 @@ jobs:
     - name: Build X86 And Push
       uses: docker/build-push-action@v4
       with:
-        context: ${{ env.FILE }}
+        context: .
+        file: ${{ env.FILE }}
         platforms: linux/amd64
         tags: ${{ env.IMAGE_URL }}
         push: true
