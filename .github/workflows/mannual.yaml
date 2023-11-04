@@ -48,11 +48,6 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    - name: Check if an update is needed
-      run: |
-        ls .
-        ls ./hugegraph-loader
-
 
     - name: Checkout latest
       uses: actions/checkout@v3
