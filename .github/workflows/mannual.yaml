@@ -18,6 +18,10 @@ on:
         required: true
         default: 'latest'
         description: 'the docker images tag'
+      file:
+        required: true
+        default: './hugegraph-hubble/Dockerfile'
+        description: 'the docker images tag'
 
 jobs:
   build_latest:
@@ -27,7 +31,8 @@ jobs:
       BRANCH: ${{inputs.branch}}
       TAG: ${{inputs.tag}}
       IMAGE_URL: ${{inputs.image_url}}
-
+      FILE: ${{inputs.file}}
+      
     steps:
     - name: Set image_url
       run: |
@@ -53,8 +58,7 @@ jobs:
     - name: Build X86 And Push
       uses: docker/build-push-action@v4
       with:
-        context: .
-        file: ./hugegraph-hubble/Dockerfile
+        context: ${{ env.FILE }}
         platforms: linux/amd64
         tags: ${{ env.IMAGE_URL }}
         push: true
