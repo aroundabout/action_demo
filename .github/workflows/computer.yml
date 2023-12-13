@@ -19,18 +19,23 @@ on:
         default: 'dandelionivy/hugegraph-computer-operator:latest'
       manager_image_url:
         required: true
-        default: 'dandelionivy/hugegraph-computer-operator-manager:latest'  
+        default: 'dandelionivy/hugegraph-computer-operator-manager:latest' 
+      version:
+        required: true
+        default: '1.2.0'
       docker_registry_url:
         required: false
         default: ''
       maven_args:
         required: false
         default: ''
+
 env:
   repository_url: apache/hugegraph-computer
   repository_branch: master
   computer_image_url: dandelionivy/hugegraph-computer:latest
   operator_image_url: dandelionivy/hugegraph-computer-operator:latest
+  version: 1.2.0
   docker_registry_url: ""
   maven_args: ""
 
@@ -48,6 +53,7 @@ jobs:
          echo "manager_image_url=${{ github.event.inputs.manager_image_url }}" >> $GITHUB_ENV         
          echo "docker_registry_url=${{ github.event.inputs.docker_registry_url }}" >> $GITHUB_ENV
          echo "maven_args=${{ github.event.inputs.maven_args }}" >> $GITHUB_ENV
+         echo "version=${{ github.event.inputs.version }}" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -97,7 +103,7 @@ jobs:
       - name: Build Computer Image
         uses: docker/build-push-action@v4
         with:
-          context: ./apache-hugegraph-computer-incubating-*
+          context: ./apache-hugegraph-computer-incubating-${{ env.version }}
           file: ./computer-dist/Dockerfile
           platforms: linux/amd64
           tags: ${{ env.computer_image_url }}
