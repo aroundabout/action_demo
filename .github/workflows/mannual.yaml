@@ -5,7 +5,7 @@ on:
       branch:
         required: true
         default: ''
-        description: 'The branch name should be like *-x.x.x, for example release-1.0.0'
+        description: 'The branch name'
       repository_url:
         required: true
         default: 'aroundabout/'
@@ -21,7 +21,7 @@ on:
       file:
         required: true
         default: './hugegraph-hubble/Dockerfile'
-        description: 'the docker images tag'
+        description: 'the path of the docker file'
       mvn_args:
         required: false
         default: ''
