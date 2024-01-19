@@ -60,12 +60,12 @@ jobs:
         ref: ${{ env.BRANCH }}
         fetch-depth: 2
 
-    - name: Build X86 And Push
+    - name: Build X86 amd arm And Push
       uses: docker/build-push-action@v4
       with:
         context: .
         file: ${{ env.FILE }}
-        platforms: linux/amd64
+        platforms: linux/amd64,linux/arm64
         tags: ${{ env.IMAGE_URL }}
         push: true
         cache-from: type=gha
