@@ -65,8 +65,8 @@ jobs:
       with:
         context: .
         file: ${{ env.FILE }}
-        # platforms: linux/amd64,linux/arm64
-        platforms: linux/amd64
+        platforms: linux/amd64,linux/arm64
+        # platforms: linux/amd64
         tags: ${{ env.IMAGE_URL }}
         push: true
         cache-from: type=gha
